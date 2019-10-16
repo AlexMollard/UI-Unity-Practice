@@ -11,6 +11,7 @@ public class ButtonManager : MonoBehaviour
     int buttonIndex;
     public GameObject MainMenuCanvas;
     public GameObject OptionCanvas;
+    public bool PlayerSelection = false;
 
     // Start is called before the first frame update
     void Start()
@@ -237,7 +238,7 @@ public class ButtonManager : MonoBehaviour
         // Main Menu
         if (buttonName == "Play")
         {
-            Debug.Log("Disable me and move to player selection");
+            PlayerSelection = (PlayerSelection ? false : true);
         }
 
         if (buttonName == "Options")
