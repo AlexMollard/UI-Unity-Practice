@@ -91,14 +91,14 @@ public class ButtonBehavior : MonoBehaviour
             {
                 if (transform.localPosition.x < -250)
                 {
-                    transform.position = new Vector3(transform.position.x + 10, transform.position.y, transform.position.z);
+                    transform.position = new Vector3(transform.position.x + 500 * Time.deltaTime, transform.position.y, transform.position.z);
                 }
             }
             else if(!Pressed)
             {
                 if (transform.localPosition.x > -380)
                 {
-                    transform.position = new Vector3(transform.position.x - 10, transform.position.y, transform.position.z);
+                    transform.position = new Vector3(transform.position.x - 500 * Time.deltaTime, transform.position.y, transform.position.z);
                 }
                 else
                 {

@@ -6,12 +6,14 @@ public class ButtonManager : MonoBehaviour
 {
     public bool IsDisabled;
     public List<GameObject> button;
+    public Vector3 DefaultPos;
     public int ChoiceIndex = 0;
     int buttonTotal;
     int buttonIndex;
     public GameObject MainMenuCanvas;
     public GameObject OptionCanvas;
     public bool PlayerSelection = false;
+    public int MenuIndicatorSpeed = 2000;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +34,8 @@ public class ButtonManager : MonoBehaviour
 
         buttonIndex = 0;
         buttonTotal = button.Count;
+
+        DefaultPos = transform.localPosition;
     }
 
     // Update is called once per frame
@@ -40,9 +44,36 @@ public class ButtonManager : MonoBehaviour
         // If menu is enabled
         if (!IsDisabled)
         {
+
+
+
+
             // Main Menu Only
             if (button[buttonIndex].GetComponent<ButtonBehavior>().IsMainMenu)
             {
+                if (PlayerSelection)
+                {
+                    if (transform.localPosition.x > -1200)
+                    {
+                        transform.position = new Vector3(transform.position.x - MenuIndicatorSpeed * Time.deltaTime, transform.position.y, transform.position.z);
+                    }
+                }
+                else if (!PlayerSelection)
+                {
+                    if (transform.localPosition.x < DefaultPos.x)
+                    {
+                        transform.position = new Vector3(transform.position.x + MenuIndicatorSpeed * Time.deltaTime, transform.position.y, transform.position.z);
+                    }
+                    else
+                    {
+                        if (transform.localPosition.x > DefaultPos.x + 20)
+                        {
+                            transform.localPosition = new Vector3(DefaultPos.x + 5, transform.localPosition.y, transform.localPosition.z);
+                        }
+                    }
+                }
+
+
                 // Menu Up
                 if (Input.GetKeyUp(KeyCode.DownArrow))
                 {

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class MainMenuManager : MonoBehaviour
@@ -9,32 +10,65 @@ public class MainMenuManager : MonoBehaviour
 
     public bool PlayerSelect = false;
     public Vector3 DefaultPosition;
+    public Quaternion DefaultRotation;
     public Vector3 PlayerSelectPosition;
-    public float CameraSpeed = 1.0f;
+    public Quaternion PlayerSelectRotation;
+    public GameObject PlayerSelectPositionObject;
+    public float CameraSpeed = 0.3f;
     private float StartTime = 0.0f;
     private float PlayerSelectionJourneyLength = 0.0f;
     bool FirstFrameTime = false;
+    public TextMeshProUGUI Title;
+    Vector3 TitleDefaultPos;
+    public float PlatformSpeed = 10f;
+    public GameObject PlatForm;
 
     // Start is called before the first frame update
     void Start()
     {
         MainCamera = Camera.main;
         DefaultPosition = MainCamera.transform.position;
-        PlayerSelectPosition = new Vector3(DefaultPosition.x, DefaultPosition.y, DefaultPosition.z + 100);
+        DefaultRotation = MainCamera.transform.rotation;
+        PlayerSelectPosition = new Vector3(PlayerSelectPositionObject.transform.position.x, PlayerSelectPositionObject.transform.position.y, PlayerSelectPositionObject.transform.position.z);
+        PlayerSelectRotation = PlayerSelectPositionObject.transform.rotation;
 
         PlayerSelectionJourneyLength = Vector3.Distance(DefaultPosition, PlayerSelectPosition);
+        TitleDefaultPos = Title.transform.localPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (ButtonSet[0].PlayerSelection)
         {
             PlayerSelect = true;
+            Title.text = "Player Selection";
+            Title.transform.localPosition = new Vector3(0, TitleDefaultPos.y + 150, 0);
+
+            if (PlatForm.transform.position.y < -0.5)
+            {
+                PlatForm.transform.position = new Vector3(PlatForm.transform.position.x, PlatForm.transform.position.y + PlatformSpeed * Time.deltaTime, PlatForm.transform.position.z);
+            }
+
         }
         else
         {
             PlayerSelect = false;
+            Title.text = "UI TESTING";
+            Title.transform.localPosition = TitleDefaultPos;
+
+            if (PlatForm.transform.position.y > -15)
+            {
+                PlatForm.transform.position = new Vector3(PlatForm.transform.position.x, PlatForm.transform.position.y - PlatformSpeed * Time.deltaTime, PlatForm.transform.position.z);
+            }
+            else
+            {
+                if (PlatForm.transform.position.y < -15)
+                {
+                    PlatForm.transform.position = new Vector3(PlatForm.transform.position.x, -15, PlatForm.transform.position.z);
+                }
+            }
         }
 
         if (PlayerSelect)
@@ -48,8 +82,9 @@ public class MainMenuManager : MonoBehaviour
             float fractionOfJourney = distCovered / PlayerSelectionJourneyLength;
 
             MainCamera.transform.position = Vector3.Lerp(DefaultPosition, PlayerSelectPosition, fractionOfJourney);
+            MainCamera.transform.rotation = Quaternion.Lerp(DefaultRotation, PlayerSelectRotation, fractionOfJourney);
 
-            
+
         }
         else
         {
@@ -62,6 +97,8 @@ public class MainMenuManager : MonoBehaviour
             float fractionOfJourney = distCovered / PlayerSelectionJourneyLength;
 
             MainCamera.transform.position = Vector3.Lerp(PlayerSelectPosition, DefaultPosition, fractionOfJourney);
+            MainCamera.transform.rotation = Quaternion.Lerp(PlayerSelectRotation, DefaultRotation, fractionOfJourney);
+
         }
     }
 }
